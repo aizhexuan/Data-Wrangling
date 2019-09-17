@@ -1,0 +1,82 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import json
+from pandas.io.json import json_normalize
+
+!pwd
+
+json.load((open('data/world_bank_projects_less.json')))
+
+json_df = pd.read_json('data/world_bank_projects_less.json')
+
+json_1 = '/Users/mama/Data Wrangling/Data/world_bank_projects.json'
+
+json.load((open(json_1)))
+
+projects = pd.read_json(json_1)
+projects.head()
+
+projects.isnull().sum()
+
+projects = projects.dropna()
+
+projects.isnull().sum()
+
+
+projects.head(10)
+
+
+projects.columns
+
+
+projects_country = pd.DataFrame(projects, columns=['boardapprovaldate', 'borrower',  'countrycode', 'totalamt', 'grantamt'])
+projects_country2 = pd.pivot_table(projects_country, index='countrycode')
+
+projects_country2.index
+
+
+continents = {'CN':'Asia', 'BD':'Asia', 'ID':'Asia', 'IN':'Asia', 'LA':'Asia', 'MV':'Asia', 'NP':'Asia', 'TJ':'Asia', 'VN':'Asia', 'UG':'Africa', 'SS':'Africa', 'ET':'Africa', 'BF':'Africa', 'BI':'Africa', 'BT':'Africa', 'GH':'Africa', 'GN':'Africa', 'KE':'Africa', 'LR':'Africa', 'MA':'Africa', 'MM':'Africa', 'MZ':'Africa', 'NE':'Africa', 'NG':'Africa', 'NI':'Africa', 'SN':'Africa', 'TD':'Africa', 'TG':'Africa', 'ZM':'Africa', 'ZR':'Africa','BO':'South America', 'BR':'South America', 'CV':'South America', 'HN':'South America', 'HT':'South America', 'PE':'South America', 'RY':'South America', 'CI':'Europe', 'GE':'Europe', 'MD':'Europe', '3A':'Other', '8S':'Other', 'AG':'Other', 'AL':'Other', 'BA':'Other', 'GZ':'Other', 'KZ':'Other',  'KG':'Other', 'MG':'Other'}
+
+projects_country['Continent'] = projects_country['countrycode'].apply(lambda x: continents[x])
+projects['Continent'] = projects['countrycode'].apply(lambda x: continents[x])
+
+projects['Continent']
+projects_country['Continent']
+
+test_df = projects_country.groupby('Continent')
+test_df.plot.bar(x='Continent')
+
+projects_country.count()
+
+projects.columns
+
+
+projects2 = projects.drop(columns=['sector2'])
+
+
+projects2.columns
+
+projects.loc[:, ['countryname', 'totalamt', 'grantamt']]
+
+projects_country.columns
+
+projects_country.plot.bar(x='Continent')
+
+
+continent_Chart = projects_country.groupby(['Continent']).sum()
+
+continent_Chart.plot.bar()
+
+
+projects.groupby(['countryname']).sum()
+
+
+
+projects2.groupby(['borrower']).sum()
+
+
+Chart = projects2.groupby('countryname').sum()
+
+Chart.plot.bar(subplots=True)
+
+
